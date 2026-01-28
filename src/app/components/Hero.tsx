@@ -6,6 +6,9 @@ import { useState, useRef, useEffect } from 'react';
 export default function Hero() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  // Add state to store window dimensions safely
+  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 });
+  
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef(null);
 
@@ -14,13 +17,26 @@ export default function Hero() {
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
-  // Track mouse for interactive floating elements
+  // Track mouse and window size safely
   useEffect(() => {
+    // Set initial size
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
+
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const toggleVideo = () => {
@@ -40,7 +56,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} className="relative h-screen w-full overflow-hidden bg-black">
-      {/* 1. ULTRA-RESPONSIVE VIDEO BACKGROUND */}
+      {/* 1. VIDEO BACKGROUND */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
@@ -48,12 +64,11 @@ export default function Hero() {
           muted
           loop
           playsInline
-          className="w-full h-full object-cover scale-105" // scale-105 prevents white edges
+          className="w-full h-full object-cover scale-105"
         >
           <source src="/kids.mp4" type="video/mp4" />
         </video>
         
-        {/* Layered Gradient for Readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-[#0a0a10]"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40"></div>
       </div>
@@ -68,8 +83,9 @@ export default function Hero() {
             style={{ 
               top: el.top, 
               left: el.left,
-              x: (mousePosition.x / window?.innerWidth - 0.5) * el.factor,
-              y: (mousePosition.y / window?.innerHeight - 0.5) * el.factor,
+              // Use windowSize state instead of window global
+              x: (mousePosition.x / windowSize.width - 0.5) * el.factor,
+              y: (mousePosition.y / windowSize.height - 0.5) * el.factor,
             }}
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 0.6, scale: 1 }}
@@ -98,7 +114,6 @@ export default function Hero() {
           transition={{ duration: 1 }}
           className="max-w-5xl"
         >
-          {/* Badge */}
           <motion.span 
             className="inline-block px-4 py-1.5 mb-6 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-[0.2em] uppercase"
             initial={{ y: -20, opacity: 0 }}
@@ -146,7 +161,6 @@ export default function Hero() {
 
       {/* 4. BOTTOM BAR CONTROLS */}
       <div className="absolute bottom-10 left-0 w-full px-10 flex justify-between items-end z-20">
-        {/* Scroll Indicator */}
         <div className="flex flex-col items-center gap-4">
             <div className="w-[1px] h-20 bg-gradient-to-b from-white/0 to-white/100 overflow-hidden relative">
                 <motion.div 
@@ -158,14 +172,12 @@ export default function Hero() {
             <span className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-bold rotate-180 [writing-mode:vertical-lr]">Scroll</span>
         </div>
 
-        {/* Video Toggle with Progress Ring */}
         <button
           onClick={toggleVideo}
           className="relative w-16 h-16 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 group hover:bg-[#FF6B6B] transition-colors duration-500"
         >
           {isPlaying ? <FaPause className="text-white" /> : <FaPlay className="text-white ml-1" />}
           
-          {/* Animated Ring */}
           <svg className="absolute inset-0 w-full h-full -rotate-90">
             <circle
               cx="32" cy="32" r="30"
