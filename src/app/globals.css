@@ -24,3 +24,64 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+
+/* globals.css */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+.shadow-glow-red {
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+}
+
+.shadow-glow-red-xl {
+  box-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
+}
+
+.shadow-glow-green {
+  box-shadow: 0 0 15px rgba(77, 170, 90, 0.7);
+}
+
+.shadow-glow-blue {
+  box-shadow: 0 0 15px rgba(58, 113, 224, 0.7);
+}
+
+.shadow-glow-gray {
+  box-shadow: 0 0 15px rgba(192, 192, 192, 0.7);
+}
+
+.drop-shadow-glow-red {
+  filter: drop-shadow(0 0 8px rgba(255, 107, 107, 0.7));
+}
+
+.hover\:shadow-glow-red:hover {
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.7);
+}
+
+/* Controller triangle shape */
+.clip-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Grid pattern for background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
