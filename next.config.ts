@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -7,7 +8,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    // This allows Next.js to process images from your real URLs
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,6 +19,6 @@ const nextConfig = {
       },
     ],
   },
-};
+} as any;
 
 export default nextConfig;
